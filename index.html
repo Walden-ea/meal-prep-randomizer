@@ -1,115 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <title>Weekly Meals</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: system-ui, sans-serif;
-      background: #0f172a;
-      color: #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-    }
+    <meta charset="UTF-8" />
+    <title>Meal Generator</title>
 
-    .container {
-      text-align: center;
-      max-width: 500px;
-    }
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Mono+One&display=swap" rel="stylesheet">
 
-    button {
-      background: #22c55e;
-      border: none;
-      padding: 14px 24px;
-      font-size: 18px;
-      border-radius: 12px;
-      cursor: pointer;
-      color: #022c22;
-      transition: 0.2s;
-    }
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, sans-serif;
+            background: #f8fafc;
+            color: #0f172a;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    button:hover {
-      transform: scale(1.05);
-      background: #16a34a;
-    }
+        h1 {
+            margin-top: 40px;
+            font-family: 'Rubik Mono One', sans-serif;
+            font-size: 32px;
+            text-align: center;
+            color: #1e293b;
+            text-shadow:
+                2px 2px 0 #cbd5f5,
+                4px 4px 0 #94a3b8;
+        }
 
-    .result {
-      margin-top: 30px;
-      text-align: left;
-      line-height: 1.6;
-      font-size: 18px;
-    }
+        .container {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
 
-    .veg {
-      color: #4ade80;
-      font-weight: 500;
-    }
-  </style>
+        /* push cards down */
+        .result {
+            width: 100%;
+            margin-top: 5vh;
+            min-height: 260px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 16px 18px;
+            margin-bottom: 16px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+        }
+
+        .category-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .item {
+            margin-left: 6px;
+            line-height: 1.6;
+        }
+
+        .veg {
+            color: #16a34a;
+            font-weight: 500;
+        }
+
+        /* fixed button */
+        button {
+            position: fixed;
+            bottom: 8vh;
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Rubik Mono One', sans-serif;
+            font-size: 14px;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 16px 28px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.25);
+            transition: all 0.15s ease;
+        }
+
+        button:hover {
+            transform: translateX(-50%) translateY(-2px) scale(1.03);
+            box-shadow: 0 14px 24px rgba(59, 130, 246, 0.3);
+            background: #2563eb;
+        }
+
+        button:active {
+            transform: translateX(-50%) translateY(1px);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        /* Note card bottom-left */
+        .note {
+            /* soft blue */
+            border-radius: 12px;
+            padding: 5px 5px;
+            font-size: 15px;
+            /* slightly bigger than body */
+            max-width: 500px;
+            line-height: 1.4;
+            color: #1e3a8a;
+            text-align: center;
+            /* centered under heading */
+            margin: 5px auto 0 auto;
+            /* spacing below heading */
+        }
+    </style>
 </head>
+
 <body>
-  <div class="container">
-    <button onclick="generate()">Generate weekly meals</button>
-    <div id="result" class="result"></div>
-  </div>
 
-  <script>
-    const breakfasts = [
-      "Oatmeal", "Yogurt with fruit", "Scrambled eggs",
-      "Pancakes", "Smoothie bowl", "Toast with avocado"
-    ];
+    <h1>MEAL GENERATOR</h1>
+    <div class="note">
+        Items marked <span class="veg">veg</span> contain sufficient vegetables. At least two of the main or side dishes
+        will always be <span class="veg">veg</span>.
+    </div>
 
-    const mains = [
-      { name: "Grilled chicken", veg: false },
-      { name: "Vegetable stir fry", veg: true },
-      { name: "Beef pasta", veg: false },
-      { name: "Lentil curry", veg: true },
-      { name: "Salmon with rice", veg: false },
-      { name: "Veggie burger", veg: true }
-    ];
+    <div class="container">
+        <div id="result" class="result"></div>
+        <button onclick="generate()">Generate weekly meals</button>
+    </div>
+    <script>
+        const breakfasts = [
+            "Chia pudding with yogurt", "Baked oats", "Fried eggs & carrots",
+            "Cottage cheese with yogurt", "Scrambled eggs", "Syrniki"
+        ];
 
-    const sides = [
-      { name: "French fries", veg: false },
-      { name: "Roasted vegetables", veg: true },
-      { name: "Rice", veg: false },
-      { name: "Salad", veg: true },
-      { name: "Mashed potatoes", veg: false },
-      { name: "Steamed broccoli", veg: true }
-    ];
+        const mains = [
+            { name: "Japanese curry", veg: true },
+            { name: "Chicken tinga", veg: false },
+            { name: "Bolognese with beans", veg: true },
+            { name: "Baked fish", veg: false },
+            { name: "Chicken cutlets", veg: false },
+            { name: "Carnitas", veg: false },
+            { name: "Miso ground meat with carrots", veg: false },
+            { name: "Dumpling meatballs", veg: true },
+            { name: "Meatball stew", veg: true },
+            { name: "Sour cream chicken", veg: false },
+        ];
 
-    const pickRandom = (arr, n) =>
-      [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
+        const sides = [
+            { name: "Lentil curry", veg: true },
+            { name: "Fried rice w/vegetables", veg: true },
+            { name: "Teriyaki chickpea pasta", veg: true },
+            { name: "Baked vegetables", veg: true },
+            { name: "Chili noodles", veg: false },
+        ];
 
-    function generate() {
-      const bf = pickRandom(breakfasts, 2);
+        const pickRandom = (arr, n) =>
+            [...arr].sort(() => 0.5 - Math.random()).slice(0, n);
 
-      let selectedMains, selectedSides;
+        function generate() {
+            const bf = pickRandom(breakfasts, 2);
 
-      while (true) {
-        selectedMains = pickRandom(mains, 2);
-        selectedSides = pickRandom(sides, 2);
+            let selectedMains, selectedSides;
 
-        const vegCount =
-          [...selectedMains, ...selectedSides].filter(i => i.veg).length;
+            while (true) {
+                selectedMains = pickRandom(mains, 2);
+                selectedSides = pickRandom(sides, 2);
 
-        if (vegCount >= 2) break;
-      }
+                const vegCount =
+                    [...selectedMains, ...selectedSides].filter(i => i.veg).length;
 
-      const format = (items) =>
-        items.map(i =>
-          typeof i === "string"
-            ? i
-            : `${i.name}${i.veg ? ' <span class="veg">(veg)</span>' : ''}`
-        ).join(", ");
+                if (vegCount >= 2) break;
+            }
 
-      document.getElementById("result").innerHTML = `
-        <div><strong>Weekly Breakfasts:</strong> ${format(bf)}</div>
-        <div><strong>Weekly Main Dishes:</strong> ${format(selectedMains)}</div>
-        <div><strong>Weekly Sides:</strong> ${format(selectedSides)}</div>
+            const renderList = (items) =>
+                items.map(i => {
+                    if (typeof i === "string") {
+                        return `<div class="item">- ${i}</div>`;
+                    }
+                    return `<div class="item">- ${i.name}${i.veg ? ' <span class="veg">(veg)</span>' : ''}</div>`;
+                }).join("");
+
+            document.getElementById("result").innerHTML = `
+        <div class="card">
+          <div class="category-title">Breakfasts:</div>
+          ${renderList(bf)}
+        </div>
+
+        <div class="card">
+          <div class="category-title">Main dishes:</div>
+          ${renderList(selectedMains)}
+        </div>
+
+        <div class="card">
+          <div class="category-title">Sides:</div>
+          ${renderList(selectedSides)}
+        </div>
       `;
-    }
-  </script>
+        }
+    </script>
+
 </body>
+
 </html>
